@@ -89,8 +89,63 @@ namespace PoemCollectionApp
                 Console.WriteLine(poem);
             }
         }
+
+        public void GenerateReportByTitle(string title, bool saveToFile = false, string filePath = "ReportByTitle.txt")
+        {
+            var report = poems.Where(p => p.Title.Equals(title, StringComparison.OrdinalIgnoreCase)).ToList();
+            DisplayOrSaveReport(report, saveToFile, filePath);
+        }
+
+        public void GenerateReportByAuthor(string author, bool saveToFile = false, string filePath = "ReportByAuthor.txt")
+        {
+            var report = poems.Where(p => p.Author.Equals(author, StringComparison.OrdinalIgnoreCase)).ToList();
+            DisplayOrSaveReport(report, saveToFile, filePath);
+        }
+
+        public void GenerateReportByTheme(string theme, bool saveToFile = false, string filePath = "ReportByTheme.txt")
+        {
+            var report = poems.Where(p => p.Theme.Equals(theme, StringComparison.OrdinalIgnoreCase)).ToList();
+            DisplayOrSaveReport(report, saveToFile, filePath);
+        }
+
+        public void GenerateReportByWordInText(string word, bool saveToFile = false, string filePath = "ReportByWordInText.txt")
+        {
+            var report = poems.Where(p => p.Text.Contains(word, StringComparison.OrdinalIgnoreCase)).ToList();
+            DisplayOrSaveReport(report, saveToFile, filePath);
+        }
+
+        public void GenerateReportByYear(int year, bool saveToFile = false, string filePath = "ReportByYear.txt")
+        {
+            var report = poems.Where(p => p.Year == year).ToList();
+            DisplayOrSaveReport(report, saveToFile, filePath);
+        }
+
+        public void GenerateReportByLength(bool saveToFile = false, string filePath = "ReportByLength.txt")
+        {
+            var report = poems.OrderBy(p => p.Text.Length).ToList();
+            DisplayOrSaveReport(report, saveToFile, filePath);
+        }
+
+        private void DisplayOrSaveReport(List<Poem> report, bool saveToFile, string filePath)
+        {
+            if (saveToFile)
+            {
+                var reportText = string.Join("\n\n", report.Select(p => p.ToString()));
+                File.WriteAllText(filePath, reportText);
+                Console.WriteLine($"Report saved to {filePath}");
+            }
+            else
+            {
+                foreach (var poem in report)
+                {
+                    Console.WriteLine(poem);
+                    Console.WriteLine();
+                }
+            }
+        }
     }
 }
+
 
 namespace PoemCollectionApp
 {
@@ -103,7 +158,7 @@ namespace PoemCollectionApp
 
             while (true)
             {
-                Console.WriteLine("\nPoem Collection Application");
+                Console.WriteLine("\nPoetryManagerApp");
                 Console.WriteLine("1. Add Poem");
                 Console.WriteLine("2. Delete Poem");
                 Console.WriteLine("3. Update Poem");
@@ -111,7 +166,13 @@ namespace PoemCollectionApp
                 Console.WriteLine("5. Save Collection to File");
                 Console.WriteLine("6. Load Collection from File");
                 Console.WriteLine("7. List All Poems");
-                Console.WriteLine("8. Exit");
+                Console.WriteLine("8. Generate Report by Title");
+                Console.WriteLine("9. Generate Report by Author");
+                Console.WriteLine("10. Generate Report by Theme");
+                Console.WriteLine("11. Generate Report by Word in Text");
+                Console.WriteLine("12. Generate Report by Year");
+                Console.WriteLine("13. Generate Report by Length");
+                Console.WriteLine("14. Exit");
                 Console.Write("Select an option: ");
 
                 var choice = Console.ReadLine();
@@ -142,6 +203,24 @@ namespace PoemCollectionApp
                         collection.ListPoems();
                         break;
                     case "8":
+                        GenerateReportByTitle(collection);
+                        break;
+                    case "9":
+                        GenerateReportByAuthor(collection);
+                        break;
+                    case "10":
+                        GenerateReportByTheme(collection);
+                        break;
+                    case "11":
+                        GenerateReportByWordInText(collection);
+                        break;
+                    case "12":
+                        GenerateReportByYear(collection);
+                        break;
+                    case "13":
+                        GenerateReportByLength(collection);
+                        break;
+                    case "14":
                         return;
                     default:
                         Console.WriteLine("Invalid option. Please try again.");
@@ -207,6 +286,63 @@ namespace PoemCollectionApp
                 Console.WriteLine(poem);
             }
         }
+
+        static void GenerateReportByTitle(PoemCollection collection)
+        {
+            Console.Write("Enter title: ");
+            string title = Console.ReadLine();
+            Console.Write("Save report to file? (yes/no): ");
+            string saveToFile = Console.ReadLine().ToLower();
+            bool save = saveToFile == "yes";
+            collection.GenerateReportByTitle(title, save);
+        }
+
+        static void GenerateReportByAuthor(PoemCollection collection)
+        {
+            Console.Write("Enter author: ");
+            string author = Console.ReadLine();
+            Console.Write("Save report to file? (yes/no): ");
+            string saveToFile = Console.ReadLine().ToLower();
+            bool save = saveToFile == "yes";
+            collection.GenerateReportByAuthor(author, save);
+        }
+
+        static void GenerateReportByTheme(PoemCollection collection)
+        {
+            Console.Write("Enter theme: ");
+            string theme = Console.ReadLine();
+            Console.Write("Save report to file? (yes/no): ");
+            string saveToFile = Console.ReadLine().ToLower();
+            bool save = saveToFile == "yes";
+            collection.GenerateReportByTheme(theme, save);
+        }
+
+        static void GenerateReportByWordInText(PoemCollection collection)
+        {
+            Console.Write("Enter word in text: ");
+            string word = Console.ReadLine();
+            Console.Write("Save report to file? (yes/no): ");
+            string saveToFile = Console.ReadLine().ToLower();
+            bool save = saveToFile == "yes";
+            collection.GenerateReportByWordInText(word, save);
+        }
+
+        static void GenerateReportByYear(PoemCollection collection)
+        {
+            Console.Write("Enter year: ");
+            int year = int.Parse(Console.ReadLine());
+            Console.Write("Save report to file? (yes/no): ");
+            string saveToFile = Console.ReadLine().ToLower();
+            bool save = saveToFile == "yes";
+            collection.GenerateReportByYear(year, save);
+        }
+
+        static void GenerateReportByLength(PoemCollection collection)
+        {
+            Console.Write("Save report to file? (yes/no): ");
+            string saveToFile = Console.ReadLine().ToLower();
+            bool save = saveToFile == "yes";
+            collection.GenerateReportByLength(save);
+        }
     }
 }
-
